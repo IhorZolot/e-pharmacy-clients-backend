@@ -5,13 +5,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
-import { OrdersController } from './orders/orders.controller';
-import { OrdersService } from './orders/orders.service';
 import { OrdersModule } from './orders/orders.module';
 
 @Module({
-  controllers: [OrdersController],
-  providers: [OrdersService],
+  controllers: [],
+  providers: [],
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
