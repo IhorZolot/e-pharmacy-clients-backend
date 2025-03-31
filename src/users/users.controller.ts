@@ -1,33 +1,32 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { UserDto } from './user.dto';
 import { User } from './user.schema';
+import { LoginDto } from './login.dto';
+import { UserDto } from './user.dto';
 
-@Controller('users')
+@Controller('/users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-  @Post()
-  async create(@Body() createUserDto: UserDto): Promise<User> {
-    return this.usersService.create(createUserDto);
+  @Post('/register')
+  async create(@Body() userDto: UserDto): Promise<User> {
+    return this.usersService.create(userDto);
   }
 
-  @Get()
+  @Get('/all-users')
   async findAll(): Promise<User[]> {
     return this.usersService.findAll();
   }
+  @Post('/login')
+  async login(@Body() loginDto: LoginDto): Promise<User> {
+    return this.usersService.login(loginDto);
+  }
+  @Get('/logout')
+  async logout(@Query('id') id: string): Promise<User | null> {
+    return this.usersService.logout(id);
+  }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string): Promise<User | null> {
-    if (id.length !== 24) {
-      throw new BadRequestException('Invalid user ID');
-    }
+  @Get('/user-info')
+  async findOne(@Query('id') id: string): Promise<User | null> {
     return this.usersService.userInfo(id);
   }
 }
