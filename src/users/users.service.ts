@@ -8,25 +8,47 @@ import { User, UserDocument } from './user.schema';
 import { Model } from 'mongoose';
 import { UserDto } from './user.dto';
 import { LoginDto } from './login.dto';
+import * as bcrypt from 'bcryptjs';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    private jwtService: JwtService,
+  ) {}
   async createUser(userDto: UserDto): Promise<User> {
-    const createdUser = new this.userModel(userDto);
+    const hashedPassword = await bcrypt.hash(userDto.password, 10);
+    const createdUser = new this.userModel({
+      ...userDto,
+      password: hashedPassword,
+    });
     return createdUser.save();
   }
   async findAllUsers(): Promise<User[]> {
     return this.userModel.find().exec();
   }
-  async login(loginDto: LoginDto): Promise<User> {
+  async login(
+    loginDto: LoginDto,
+  ): Promise<{ token: string; user: Partial<User> }> {
     const { email, password } = loginDto;
-    const user = await this.userModel.findOne({ email, password }).exec();
-
+    const user = await this.userModel.findOne({ email }).exec();
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
-    return user;
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid password');
+    }
+    const payload = { sub: user._id, email: user.email };
+    const token = this.jwtService.sign(payload);
+    const { password: _, ...userWithoutPassword } = user.toObject();
+
+    return {
+      token,
+      user: userWithoutPassword,
+    };
   }
   async logout(id: string): Promise<User | null> {
     if (id.length !== 24) {
