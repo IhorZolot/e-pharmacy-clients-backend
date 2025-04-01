@@ -5,7 +5,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
-import { OrdersModule } from './orders/orders.module';
+import { CartsModule } from './cart/cart.module';
+import { StoresModule } from './stores/stores.module';
+import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
   controllers: [],
@@ -26,7 +28,9 @@ import { OrdersModule } from './orders/orders.module';
     ),
     UsersModule,
     ProductsModule,
-    OrdersModule,
+    CartsModule,
+    StoresModule,
+    ReviewsModule,
   ],
 })
 export class AppModule {}
