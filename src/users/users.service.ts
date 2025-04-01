@@ -12,11 +12,11 @@ import { LoginDto } from './login.dto';
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
-  async create(userDto: UserDto): Promise<User> {
+  async createUser(userDto: UserDto): Promise<User> {
     const createdUser = new this.userModel(userDto);
     return createdUser.save();
   }
-  async findAll(): Promise<User[]> {
+  async findAllUsers(): Promise<User[]> {
     return this.userModel.find().exec();
   }
   async login(loginDto: LoginDto): Promise<User> {
