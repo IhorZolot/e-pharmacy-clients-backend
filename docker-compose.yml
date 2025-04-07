@@ -1,0 +1,44 @@
+version: '3.9'
+
+services:
+  nest-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nest-app
+    ports:
+      - '${PORT}:${PORT}'
+    env_file:
+      - .env.production
+    depends_on:
+      - mongo
+    networks:
+      - nest-network
+
+  mongo:
+    image: mongo:7
+    container_name: mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - nest-network
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    ports:
+      - '8081:8081'
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+    depends_on:
+      - mongo
+    networks:
+      - nest-network
+
+volumes:
+  mongo-data:
+
+networks:
+  nest-network:
