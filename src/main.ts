@@ -6,7 +6,7 @@ async function start() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
   const configService = app.get(ConfigService);
-  const PORT = configService.get<number>('PORT') || 3000;
+  const PORT = configService.get<number>('PORT') || process.env.PORT || 3000;
   const config = new DocumentBuilder()
     .setTitle('E-Pharmacy')
     .setDescription('E-Pharmacy API')
@@ -20,4 +20,4 @@ async function start() {
     console.log(`🌍 Server started on port ${PORT}`),
   );
 }
-start();
+void start();

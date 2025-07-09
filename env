@@ -1,6 +1,0 @@
-# PORT=8000
-# DB_HOST=mongodb+srv://Ihor:1eUxm78kWDqbxaMz@cluster0.jt0wk.mongodb.net/franchise?retryWrites=true&w=majority
-# JWT_SECRET=nwP9OibAXPR0KIP9FAKMPyLp8ixIMwaU
-
-PORT=3000
-NODE_ENV=development

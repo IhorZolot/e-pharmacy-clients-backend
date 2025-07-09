@@ -53,6 +53,8 @@ export class UsersController {
   async findOne(@Query('id') id: string): Promise<User | null> {
     return this.usersService.userInfo(id);
   }
+  @ApiOperation({ summary: 'Get user profile' })
+  @ApiResponse({ status: 200, type: User })
   @UseGuards(AuthGuard('jwt'))
   @Get('/me')
   getProfile(@Request() req: RequestWithUser) {

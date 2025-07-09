@@ -21,7 +21,11 @@ import { ReviewsModule } from './reviews/reviews.module';
       process.env.DB_HOST || 'mongodb://localhost:27017/mydatabase',
       {
         connectionFactory: (connection: Connection) => {
-          console.log('✅ Connected to MongoDB');
+          if (process.env.NODE_ENV === 'development') {
+            console.log('✅ Connected to MongoDB:', process.env.DB_HOST);
+          } else {
+            console.log('✅ Connected to MongoDB');
+          }
           return connection;
         },
       },
